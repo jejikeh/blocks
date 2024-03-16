@@ -3,24 +3,25 @@ package main
 import rl "github.com/gen2brain/raylib-go/raylib"
 
 type Game struct {
-	block *Blocks
+	Block *Blocks
 }
 
 func newGame() *Game {
 	return &Game{
-		block: NewBlocks(5),
+		Block: NewBlocks(10),
 	}
 }
 
 func (g *Game) init() {
+	g.Block.Init()
 }
 
 func (g *Game) update() {
-	g.block.Update()
+	g.Block.Update()
 }
 
 func (g *Game) draw() {
 	rl.ClearBackground(rl.Black)
 
-	g.block.Draw()
+	g.Block.Draw()
 }

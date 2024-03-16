@@ -15,6 +15,8 @@ type Renderer struct {
 	Textrure rl.RenderTexture2D
 }
 
+var MouseScale rl.Vector2
+
 func newRenderer(title string, x, y int32) *Renderer {
 	r := &Renderer{
 		Title:          title,
@@ -55,6 +57,10 @@ func (r *Renderer) run(g *Game) {
 
 		x1 := float32(r.RendererWidth) * scale
 		y1 := screenHeight
+
+		rl.SetMouseOffset(-int(x0), -int(y0))
+		rl.SetMouseScale(1/scale, 1/scale)
+		MouseScale = rl.NewVector2(scale, scale)
 
 		return rl.NewRectangle(x0, y0, x1, y1)
 	}

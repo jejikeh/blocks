@@ -2,7 +2,6 @@ package main
 
 import (
 	"math"
-	"math/rand"
 
 	rl "github.com/gen2brain/raylib-go/raylib"
 )
@@ -53,8 +52,11 @@ func NewSquishAnimation() *Animation {
 		FrameTime:   0.03,
 		IsPlaying:   false,
 		Update: func(a *Animation, e *Entity) {
-			e.Size.X += float32(math.Sin(float64(rl.GetTime()+rand.Float64()))) * 3.0
-			e.Size.Y += float32(math.Cos(float64(rl.GetTime()+rand.Float64()))) * 3.0
+			e.Size = rl.Vector2Lerp(e.Size, rl.Vector2Add(e.InitialSize, e.InitialSize), 0.1)
+
+			e.Position = rl.Vector2Lerp(e.Position, rl.Vector2SubtractValue(e.Position, 4), 0.1)
+
+			e.Color = LerpColor(e.Color, rl.Yellow, 0.3)
 
 			// last frame
 			if a.CurrentFrame == a.TotalFrames-1 {
@@ -64,9 +66,18 @@ func NewSquishAnimation() *Animation {
 	}
 }
 
+func LerpColor(a, b rl.Color, t float32) rl.Color {
+	return rl.Color{
+		R: uint8(rl.Lerp(float32(a.R), float32(b.R), t)),
+		G: uint8(rl.Lerp(float32(a.G), float32(b.G), t)),
+		B: uint8(rl.Lerp(float32(a.B), float32(b.B), t)),
+		A: uint8(rl.Lerp(float32(a.A), float32(b.A), t)),
+	}
+}
+
 func NewLerpBackToInitialSizeAnimation() *Animation {
 	return &Animation{
-		TotalFrames: 90,
+		TotalFrames: 9,
 		Looping:     false,
 		Tag:         LerpBackToInitialSize,
 		FrameTime:   0.03,
@@ -74,9 +85,15 @@ func NewLerpBackToInitialSizeAnimation() *Animation {
 		Update: func(a *Animation, e *Entity) {
 			e.Size = rl.Vector2Lerp(e.Size, e.InitialSize, 0.1)
 
+			e.Color = LerpColor(e.Color, e.InitialColor, 0.3)
+
+			e.Position = rl.Vector2Lerp(e.Position, e.InitialPosition, 0.1)
+
 			// last frame
 			if a.CurrentFrame == a.TotalFrames-1 {
 				e.Size = e.InitialSize
+				e.Color = e.InitialColor
+				e.Position = e.InitialPosition
 			}
 		},
 	}

@@ -8,14 +8,15 @@ import (
 )
 
 type Entity struct {
-	Position rl.Vector2
-	Rotation float32
+	InitialPosition rl.Vector2
+	Position        rl.Vector2
+	Rotation        float32
 
 	InitialSize rl.Vector2
+	Size        rl.Vector2
 
-	Size rl.Vector2
-
-	Color rl.Color
+	InitialColor rl.Color
+	Color        rl.Color
 
 	Texture       *rl.Texture2D
 	SourceTexture rl.Rectangle
@@ -28,15 +29,17 @@ type Entity struct {
 
 func NewEntity(t *rl.Texture2D, pos, size rl.Vector2, s rl.Rectangle) *Entity {
 	en := &Entity{
-		Position:      pos,
-		InitialSize:   size,
-		Size:          size,
-		Texture:       t,
-		SourceTexture: s,
-		Color:         rl.White,
-		Direction:     rand.Float32()*math.Pi + 2,
-		TimeMod:       rand.Float64()*0.5 + 0.5,
-		Animations:    make(map[int]*Animation),
+		InitialPosition: pos,
+		Position:        pos,
+		InitialSize:     size,
+		Size:            size,
+		Texture:         t,
+		SourceTexture:   s,
+		InitialColor:    rl.White,
+		Color:           rl.White,
+		Direction:       rand.Float32()*math.Pi + 2,
+		TimeMod:         rand.Float64()*0.5 + 0.5,
+		Animations:      make(map[int]*Animation),
 	}
 
 	en.AddAnimation(Squish)
@@ -56,4 +59,8 @@ func (e *Entity) Update() {
 
 func (e *Entity) Draw() {
 	rl.DrawTexturePro(*e.Texture, e.SourceTexture, rl.NewRectangle(e.Position.X, e.Position.Y, e.Size.X, e.Size.Y), rl.Vector2{}, e.Rotation, e.Color)
+}
+
+func (e *Entity) GetCollisionRec() rl.Rectangle {
+	return rl.NewRectangle(e.Position.X, e.Position.Y, e.Size.X, e.Size.Y)
 }

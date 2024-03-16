@@ -5,7 +5,7 @@ import rl "github.com/gen2brain/raylib-go/raylib"
 type Texture string
 
 const (
-	Clothing Texture = "assets/clothing.png"
+	Clothing Texture = "assets/natural.png"
 )
 
 type TextureManager struct {
